@@ -1,0 +1,73 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+env/
+venv/
+ENV/
+*.so
+
+# Django
+*.log
+*.pot
+*.pyc
+*.pyo
+__pycache__/
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+
+# Static files
+/static/
+/media/
+
+# Local development environment
+.env
+.env.*
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# PyCharm
+.idea/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# mypy
+.mypy_cache/
+
+# Django migrations
+migrations/
+
+# Python virtual environment
+.venv/
+
+# Coverage reports
+.coverage
+coverage.xml
+*.cover
+*.py,cover
+
+# Pytest
+.cache/
+
+# Django files
+*.log
+*.pot
+*.pyc
+*.pyo
+__pycache__/

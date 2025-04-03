@@ -1,0 +1,64 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Profile Card -->
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    {% comment %} <img src="{{ user.profile_photo.url|default:'/static/core/img/default-profile.png' }}" 
+                         class="rounded-circle mb-3" width="150" height="150">
+                    <h3>{{ user.get_full_name }}</h3> {% endcomment %}
+                    <p class="text-muted">{{ user.get_role_display }}</p>
+                    
+                    <div class="d-flex justify-content-center mb-3">
+                        <a href="{% url 'update_profile' %}" class="btn btn-primary mr-2">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </a>
+                        <a href="{% url 'change_password' %}" class="btn btn-secondary">
+                            <i class="fas fa-key"></i> Change Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <!-- Profile Details -->
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4>Profile Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h5>Basic Information</h5>
+                            <p><strong>Email:</strong> {{ user.email }}</p>
+                            <p><strong>Phone:</strong> {{ user.phone_number|default:"Not provided" }}</p>
+                            <p><strong>Joined:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Role-Specific Information</h5>
+                            {% if profile %}
+                                {% if user.role == 'FARMER' %}
+                                    <p><strong>Bank:</strong> {{ profile.bank_name }}</p>
+                                    <p><strong>Account:</strong> {{ profile.account_number }}</p>
+                                {% elif user.role == 'CUSTOMER' %}
+                                    <p><strong>Delivery Address:</strong> {{ profile.delivery_address }}</p>
+                                {% elif user.role == 'DELIVERY' %}
+                                    <p><strong>Vehicle:</strong> {{ profile.vehicle_type }} ({{ profile.vehicle_number }})</p>
+                                {% elif user.role == 'MILL_OPERATOR' %}
+                                    <p><strong>Shift:</strong> {{ profile.get_shift_display }}</p>
+                                {% elif user.role == 'ADMIN' %}
+                                    <p><strong>Admin Type:</strong> {{ profile.get_admin_type_display }}</p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

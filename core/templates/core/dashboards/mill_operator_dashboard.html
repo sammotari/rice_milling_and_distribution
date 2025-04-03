@@ -1,0 +1,116 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Mill Operator Dashboard</h1>
+        <div>
+            <div class="btn-group" role="group">
+                <a href="{% url 'profile' %}" class="btn btn-circle btn-primary mr-2" title="Manage Profile">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="{% url 'logout' %}" class="btn btn-circle btn-danger" title="Logout" 
+                   onclick="return confirm('Are you sure you want to logout?');">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Paddy to Process -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pending Processing (kg)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pending_processing }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-industry fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processed Today -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Processed Today (kg)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ processed_today }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Current Batch</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                            aria-labelledby="dropdownMenuLink">
+                            {% comment %} <a class="dropdown-item" href="{% url 'start_new_batch' %}">Start New Batch</a> {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if current_batch %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Batch ID</th>
+                                    <th>Paddy Type</th>
+                                    <th>Quantity</th>
+                                    <th>Start Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ current_batch.id|truncatechars:8 }}</td>
+                                    <td>{{ current_batch.paddy_type }}</td>
+                                    <td>{{ current_batch.quantity }} kg</td>
+                                    <td>{{ current_batch.start_time|time }}</td>
+                                    <td>
+                                        <span class="badge badge-{{ current_batch.status_badge }}">
+                                            {{ current_batch.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <a href="{% url 'manage_batch' current_batch.id %}" class="btn btn-primary">
+                            <i class="fas fa-cogs"></i> Manage Batch
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning">No active processing batch</div>
+                    {% comment %} <a href="{% url 'start_new_batch' %}" class="btn btn-primary"> {% endcomment %}
+                        <i class="fas fa-play"></i> Start New Batch
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

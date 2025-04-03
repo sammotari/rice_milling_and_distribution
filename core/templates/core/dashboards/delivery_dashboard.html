@@ -1,0 +1,108 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Delivery Dashboard</h1>
+        
+        <!-- Logout Button -->
+        <div>
+            <div class="btn-group" role="group">
+                <a href="{% url 'profile' %}" class="btn btn-circle btn-primary mr-2" title="Manage Profile">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="{% url 'logout' %}" class="btn btn-circle btn-danger" title="Logout" 
+                   onclick="return confirm('Are you sure you want to logout?');">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5 class=" text-gray-800">Vehicle: ABC-1234</h5> <!-- Static vehicle number -->
+
+        <!-- Assigned Deliveries -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Assigned Deliveries</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">5</div> <!-- Static number of assigned deliveries -->
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-truck fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Deliveries -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Completed (This Month)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">12</div> <!-- Static number of completed deliveries -->
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Active Deliveries</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>12345678</td> <!-- Static Order ID -->
+                                    <td>John Doe</td> <!-- Static Customer Name -->
+                                    <td>123 Some Street, City, Country</td> <!-- Static Customer Address -->
+                                    <td><span class="badge badge-warning text-gray-800">Pending</span></td> <!-- Static Status with grey text -->
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-primary">Manage</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>23456789</td> <!-- Static Order ID -->
+                                    <td>Jane Smith</td> <!-- Static Customer Name -->
+                                    <td>456 Another St, City, Country</td> <!-- Static Customer Address -->
+                                    <td><span class="badge badge-success text-gray-800">Completed</span></td> <!-- Static Status with grey text -->
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-primary">Manage</a>
+                                    </td>
+                                </tr>
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
