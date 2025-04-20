@@ -87,9 +87,10 @@ This project is licensed under the MIT License.
 ✨ Author
 
 Samwel Motari
-💼 MOTARI CORP
-📷 Dream Lens Studio
-📧 sammotari@gmail.com
+💼 MOTARI 
+📧 sammotarih@gmail.com
+
+
 📌 Contribution
 
 Contributions are welcome! Feel free to fork the repo and submit a PR.
