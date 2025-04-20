@@ -64,6 +64,7 @@ python manage.py migrate
     Create Superuser
 
 python manage.py createsuperuser
+python manage.py populate
 
     Run the Server
 
