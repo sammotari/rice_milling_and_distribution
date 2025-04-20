@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="alert alert-success shadow p-5 rounded text-center">
+        <h2 class="mb-3">
+          <span class="d-block mb-2" style="font-size: 2.5rem;">🎉</span>
+          Order Placed Successfully!
+        </h2>
+        <p class="lead mb-3">
+          Thank you for your order. Our team will review your payment and get your delivery ready.
+        </p>
+        <hr>
+        <p class="mb-4 text-muted">
+          You can track your order and enter your transaction code from your account dashboard.
+        </p>
+        <a href="{% url 'order_list' %}" class="btn btn-primary px-4 py-2">
+          View My Orders
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

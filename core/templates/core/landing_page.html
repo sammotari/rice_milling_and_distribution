@@ -1,43 +1,114 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-
 {% block title %}Welcome to Our Platform{% endblock %}
 
 {% block content %}
+<style>
+    body {
+        background-color: #102E50;
+        color: #f0f0f0;
+    }
+    .hero, .cta {
+        background-color: #143b66;
+        color: #ffffff;
+    }
+    .features {
+        background-color: #1a436e;
+        color: #e6e6e6;
+    }
+    .feature-box i {
+        color: #ffc107;
+    }
+    .testimonial-box {
+        background-color: #204d80;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        color: #f0f0f0;
+    }
+    .testimonials {
+        background-color: #1c3f6d;
+        color: #dcdcdc;
+    }
+    .btn-light {
+        background-color: #ffc107;
+        color: #102E50;
+        border: none;
+    }
+    .btn-light:hover {
+        background-color: #e0a800;
+        color: #fff;
+    }
+    .feature-box, .testimonial-box {
+        padding: 1rem;
+    }
+    
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2rem;
+        }
+        .hero p.lead {
+            font-size: 1.1rem;
+        }
+        .cta h2 {
+            font-size: 1.8rem;
+        }
+        .btn-lg {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+        }
+        .feature-box i {
+            font-size: 2rem;
+        }
+        .testimonial-box {
+            margin-bottom: 15px;
+        }
+        .cta .d-md-flex {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .cta .btn-lg {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
 <!-- Hero Section -->
-<section class="hero bg-primary text-white text-center py-5">
+<section class="hero text-center py-4 py-md-5">
     <div class="container">
-        <h1 class="display-4">Welcome to Our Platform</h1>
-        <p class="lead">Connecting Farmers, Customers, and Service Providers</p>
-        <a href="{% url 'login' %}" class="btn btn-light btn-lg">Get Started</a>
+        <h1 class="display-4 mb-3">Welcome to Our Platform</h1>
+        <p class="lead mb-4">Connecting Farmers, Customers, and Service Providers</p>
+        <a href="{% url 'login' %}" class="btn btn-light btn-lg mt-2 mt-md-3">Get Started</a>
     </div>
 </section>
 
 <!-- Features Section -->
-<section class="features py-5">
+<section class="features py-4 py-md-5">
     <div class="container">
-        <h2 class="text-center mb-4">Our Key Features</h2>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="feature-box text-center">
-                    <i class="fas fa-users fa-3x mb-3"></i>
+        <h2 class="text-center mb-4 mb-md-5">Our Key Features</h2>
+        <div class="row g-3 g-md-4">
+            <div class="col-12 col-md-4">
+                <div class="feature-box text-center h-100">
+                    <i class="fas fa-users fa-3x mb-2 mb-md-3"></i>
                     <h4>Farmers</h4>
-                    <p>Manage your crops, monitor your progress, and access the marketplace for better deals.</p>
+                    <p class="mb-0">Manage your crops, monitor your progress, and access the marketplace for better deals.</p>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="feature-box text-center">
-                    <i class="fas fa-truck fa-3x mb-3"></i>
+            <div class="col-12 col-md-4">
+                <div class="feature-box text-center h-100">
+                    <i class="fas fa-truck fa-3x mb-2 mb-md-3"></i>
                     <h4>Delivery</h4>
-                    <p>Efficient and reliable delivery service to bring goods to your doorstep quickly.</p>
+                    <p class="mb-0">Efficient and reliable delivery service to bring goods to your doorstep quickly.</p>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="feature-box text-center">
-                    <i class="fas fa-cogs fa-3x mb-3"></i>
+            <div class="col-12 col-md-4">
+                <div class="feature-box text-center h-100">
+                    <i class="fas fa-cogs fa-3x mb-2 mb-md-3"></i>
                     <h4>Mill Operators</h4>
-                    <p>Ensure that your grains are processed with the highest quality standards.</p>
+                    <p class="mb-0">Ensure that your grains are processed with the highest quality standards.</p>
                 </div>
             </div>
         </div>
@@ -45,26 +116,26 @@
 </section>
 
 <!-- Testimonials Section -->
-<section class="testimonials bg-light py-5">
+<section class="testimonials py-4 py-md-5">
     <div class="container">
-        <h2 class="text-center mb-4">What Our Users Say</h2>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="testimonial-box text-center">
-                    <p class="lead">"This platform has helped me find better markets for my crops!"</p>
-                    <h5>- John Doe, Farmer</h5>
+        <h2 class="text-center mb-4 mb-md-5">What Our Users Say</h2>
+        <div class="row g-3 g-md-4">
+            <div class="col-12 col-md-4">
+                <div class="testimonial-box text-center h-100">
+                    <p class="lead mb-3">"This platform has helped me find better markets for my crops!"</p>
+                    <h5 class="mb-0">- John Doe, Farmer</h5>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="testimonial-box text-center">
-                    <p class="lead">"The delivery service is fast and reliable. Highly recommend!"</p>
-                    <h5>- Jane Smith, Customer</h5>
+            <div class="col-12 col-md-4">
+                <div class="testimonial-box text-center h-100">
+                    <p class="lead mb-3">"The delivery service is fast and reliable. Highly recommend!"</p>
+                    <h5 class="mb-0">- Jane Smith, Customer</h5>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="testimonial-box text-center">
-                    <p class="lead">"Thanks to this platform, my mill operations have increased efficiency."</p>
-                    <h5>- Mike Johnson, Mill Operator</h5>
+            <div class="col-12 col-md-4">
+                <div class="testimonial-box text-center h-100">
+                    <p class="lead mb-3">"Thanks to this platform, my mill operations have increased efficiency."</p>
+                    <h5 class="mb-0">- Mike Johnson, Mill Operator</h5>
                 </div>
             </div>
         </div>
@@ -72,13 +143,15 @@
 </section>
 
 <!-- Call-to-Action Section -->
-<section class="cta bg-primary text-white text-center py-5">
+<section class="cta text-center py-4 py-md-5">
     <div class="container">
-        <h2 class="display-4">Join Us Today</h2>
-        <p class="lead">Become part of a thriving ecosystem that supports farmers, customers, and service providers.</p>
-        <a href="{% url 'register_farmer' %}" class="btn btn-light btn-lg">Register as Farmer</a>
-        <a href="{% url 'register_customer' %}" class="btn btn-light btn-lg">Register as Customer</a>
-        <a href="{% url 'register_admin' %}" class="btn btn-light btn-lg">Register as Admin</a>
+        <h2 class="display-4 mb-3">Join Us Today</h2>
+        <p class="lead mb-4">Become part of a thriving ecosystem that supports farmers, customers, and service providers.</p>
+        <div class="d-grid gap-2 gap-md-3 d-md-flex justify-content-center">
+            <a href="{% url 'register_farmer' %}" class="btn btn-light btn-lg">Register as Farmer</a>
+            <a href="{% url 'register_customer' %}" class="btn btn-light btn-lg">Register as Customer</a>
+            {% comment %} <a href="{% url 'register_admin' %}" class="btn btn-light btn-lg">Register as Admin</a> {% endcomment %}
+        </div>
     </div>
 </section>
 {% endblock %}

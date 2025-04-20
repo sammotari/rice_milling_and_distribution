@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center text-success">Success!</h1>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="text-center text-muted">Your rice processing entry has been successfully saved and the inventory has been updated.</p>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'paddy_inventory' %}" class="btn btn-outline-secondary mx-2">View Paddy Inventory</a>
+                    <a href="{% url 'processed_rice_inventory' %}" class="btn btn-outline-secondary mx-2">View Processed Rice Inventory</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

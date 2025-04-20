@@ -1,31 +1,39 @@
+from time import timezone
 from django import forms
+from dal import autocomplete
 from django.contrib.auth.forms import (
     AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 )
 from django.utils.translation import gettext_lazy as _
-from .models import CustomUser, Farmer, Customer, DeliveryPersonnel, MillOperator, Admin
+from .models import CustomUser, Delivery, Farmer, Customer, DeliveryPersonnel, MillOperator, Admin, Order, OrderItem, PackageSize, PaddyPrice, PaddySupply, ProcessedRice, SoldRiceInventory, Transaction
+from django.contrib.auth import get_user_model
+
 
 class BaseForm:
     """Base form class for common styling"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
-            if not isinstance(self.fields[field].widget, forms.CheckboxInput):
-                self.fields[field].widget.attrs.update({'class': 'form-control'})
+            widget = self.fields[field].widget
+            if not isinstance(widget, forms.CheckboxInput):
+                widget.attrs.update({'class': 'form-control'})
             if self.fields[field].required:
-                self.fields[field].widget.attrs['required'] = 'required'
+                widget.attrs['required'] = 'required'
 
-# Authentication Forms
+# ---------------- Authentication Forms ----------------
+
 class UserLoginForm(BaseForm, AuthenticationForm):
     username = forms.CharField(label=_("Email or Username"))
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({'placeholder': 'Email or Username'})
         self.fields['password'].widget.attrs.update({'placeholder': 'Password'})
 
+
 class UserPasswordChangeForm(BaseForm, PasswordChangeForm):
     pass
+
 
 class UserPasswordResetForm(BaseForm, PasswordResetForm):
     email = forms.EmailField(
@@ -34,10 +42,12 @@ class UserPasswordResetForm(BaseForm, PasswordResetForm):
         widget=forms.EmailInput(attrs={'autocomplete': 'email', 'placeholder': 'Enter your email'})
     )
 
+
 class UserSetPasswordForm(BaseForm, SetPasswordForm):
     pass
 
-# User Management Forms
+# ---------------- Registration & Profile Forms ----------------
+
 class UserRegistrationForm(BaseForm, forms.ModelForm):
     password1 = forms.CharField(
         label=_("Password"),
@@ -100,16 +110,12 @@ class UserRegistrationForm(BaseForm, forms.ModelForm):
         elif role == CustomUser.Role.ADMIN:
             Admin.objects.create(user=user)
 
-
-
-
 class UserUpdateForm(BaseForm, forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('email', 'username', 'first_name', 'last_name', 'phone_number', 'profile_photo')
-        widgets = {
-            'profile_photo': forms.FileInput(attrs={'class': 'form-control-file'}),
-        }
+        fields = ('email', 'username', 'first_name', 'last_name', 'phone_number')
+
+# ---------------- Role-Based Profile Forms ----------------
 
 class FarmerProfileForm(BaseForm, forms.ModelForm):
     class Meta:
@@ -120,7 +126,6 @@ class FarmerProfileForm(BaseForm, forms.ModelForm):
             'account_number': _('Account Number'),
         }
 
-
 class CustomerProfileForm(BaseForm, forms.ModelForm):
     class Meta:
         model = Customer
@@ -128,7 +133,6 @@ class CustomerProfileForm(BaseForm, forms.ModelForm):
         widgets = {
             'delivery_address': forms.Textarea(attrs={'rows': 3}),
         }
-
 
 class DeliveryPersonnelProfileForm(BaseForm, forms.ModelForm):
     class Meta:
@@ -146,7 +150,6 @@ class MillOperatorProfileForm(BaseForm, forms.ModelForm):
             'shift': forms.Select(attrs={'class': 'form-select'}),
         }
 
-
 class AdminProfileForm(BaseForm, forms.ModelForm):
     class Meta:
         model = Admin
@@ -154,3 +157,226 @@ class AdminProfileForm(BaseForm, forms.ModelForm):
         widgets = {
             'admin_type': forms.Select(attrs={'class': 'form-select'}),
         }
+
+
+
+# paddy price
+
+class PaddyPriceForm(forms.ModelForm):
+    class Meta:
+        model = PaddyPrice
+        fields = ['price_per_kg']  # Only include price_per_kg as it is editable
+
+#  paddy supply
+class PaddySupplyForm(forms.ModelForm):
+    class Meta:
+        model = PaddySupply
+        fields = ['farmer', 'quantity', 'quality_rating', 'moisture_content', 'status']
+
+    farmer = forms.ModelChoiceField(
+        queryset=Farmer.objects.all(),
+        widget=autocomplete.ModelSelect2(url='farmer-autocomplete')  # Using the 'farmer-autocomplete' URL
+    )
+
+
+
+
+
+
+class MillOperatorPaddySupplyForm(forms.ModelForm):
+    class Meta:
+        model = PaddySupply
+        fields = ['farmer', 'quantity', 'quality_rating', 'moisture_content']
+
+        widgets = {
+            'farmer': forms.Select(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'quality_rating': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 5}),
+            'moisture_content': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+        }
+
+    def save(self, commit=True, user=None):
+        instance = super().save(commit=False)
+        if user:
+            instance.save(user_id=user.id)
+        else:
+            instance.save()
+        return instance
+
+
+
+class AdminPaddyPaymentApprovalForm(forms.ModelForm):
+    payment_reference_code = forms.CharField(
+        max_length=100,
+        required=True,
+        help_text="Enter the payment reference code",
+        widget=forms.TextInput(attrs={'placeholder': 'Payment Reference Code'})
+    )
+
+    class Meta:
+        model = PaddySupply
+        fields = ['payment_reference_code']  # Include only the payment_reference_code field
+
+    def approve(self, instance, admin_user):
+        """Approve the payment for the instance and set the payment reference code."""
+        # Assign the payment reference code from the form
+        instance.payment_reference_code = self.cleaned_data['payment_reference_code']
+        # Call the approve_payment method to finalize the approval
+        instance.approve_payment(admin_user)
+
+
+class ProcessedRiceForm(forms.ModelForm):
+    class Meta:
+        model = ProcessedRice
+        fields = ['quantity']  # Mill operator will enter the quantity of paddy processed
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Auto-set the mill_operator field to the logged-in user
+        self.fields['quantity'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Enter quantity of paddy processed (kg)'})
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        # Automatically assign the logged-in mill operator to the instance
+        instance.mill_operator = get_user_model().objects.get(id=self.initial.get('user_id'))
+        
+        if commit:
+            instance.save()
+        return instance
+    
+
+
+class PackageSizeForm(forms.ModelForm):
+    class Meta:
+        model = PackageSize
+        fields = ['weight_kg', 'label', 'price_per_package']
+        widgets = {
+            'weight_kg': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'label': forms.TextInput(attrs={'class': 'form-control'}),
+            'price_per_package': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+        }
+
+
+
+
+# from here customerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr 
+from django.utils import timezone
+
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['status']  # Only 'status' is visible/editable in this form
+        widgets = {
+            'status': forms.Select(choices=Order.ORDER_STATUS_CHOICES),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)  # Capture request for user info
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        order = super().save(commit=False)
+
+        # Auto-assign the customer
+        if self.request and hasattr(self.request.user, 'customer'):
+            order.customer = self.request.user.customer
+
+            # Auto-fill name and address from customer
+            user = self.request.user
+            customer_profile = user.customer
+
+            if not order.delivery_address:
+                order.delivery_address = customer_profile.delivery_address
+
+            if not order.customer_name:
+                order.customer_name = f"{user.first_name} {user.last_name}"
+
+        if commit:
+            order.save()
+        return order
+
+
+
+
+
+class OrderItemForm(forms.ModelForm):
+    class Meta:
+        model = OrderItem
+        fields = ['package_size', 'quantity']
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data.get('quantity')
+        if quantity <= 0:
+            raise forms.ValidationError("Quantity must be a positive integer.")
+        return quantity
+
+
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ['transaction_code_customer']
+        widgets = {
+            'transaction_code_customer': forms.TextInput(attrs={'placeholder': 'Enter MPESA code'}),
+        }
+
+
+# hiii ziii
+class SoldRiceInventoryForm(forms.ModelForm):
+    class Meta:
+        model = SoldRiceInventory
+        fields = ['quantity']
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data.get('quantity')
+        if quantity < 0:
+            raise forms.ValidationError("Sold rice quantity cannot be negative.")
+        return quantity
+
+
+
+class AssignDeliveryForm(forms.Form):
+    order = forms.ModelChoiceField(
+        queryset=Order.objects.filter(
+            delivery_personnel__isnull=True,
+            status='paid'
+        ).order_by('-created_at'),
+        label='Select Order',
+        empty_label="-- Select Order --",
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
+    delivery_personnel = forms.ModelChoiceField(
+        queryset=DeliveryPersonnel.objects.exclude(
+            id__in=Order.objects.filter(
+                status='paid',
+                delivery_personnel__isnull=False
+            ).values_list('delivery_personnel__id', flat=True)
+        ),
+        label='Select Delivery Personnel',
+        empty_label="-- Select Delivery Personnel --",
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
+
+
+class DeliveryUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Delivery
+        fields = ['is_delivered']
+        widgets = {
+            'is_delivered': forms.CheckboxInput(),
+        }
+
+    def save(self, commit=True):
+        delivery = super().save(commit=False)
+
+        # Auto-set delivery date when marked as delivered
+        if delivery.is_delivered and not delivery.delivery_date:
+            delivery.delivery_date = timezone.now()
+
+        if commit:
+            delivery.save()
+        return delivery

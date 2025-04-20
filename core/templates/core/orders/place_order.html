@@ -1,0 +1,58 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="mb-4 text-center">Place Your Order</h2>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row">
+          {% for package in packages %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body text-center">
+                <h5 class="card-title">{{ package.label }}</h5>
+                <p class="card-text">
+                  <strong>Weight:</strong> {{ package.weight_kg }} kg<br>
+                  <strong>Price:</strong> KES {{ package.price_per_package }}
+                </p>
+                <div class="input-group justify-content-center">
+                  <button type="button" class="btn btn-outline-danger" onclick="changeQuantity('{{ package.id }}', -1)">
+                    <i class="bi bi-dash"></i>
+                  </button>
+                  <input 
+                    type="number" 
+                    name="package_{{ package.id }}" 
+                    id="qty_{{ package.id }}" 
+                    value="0" 
+                    class="form-control text-center mx-2" 
+                    style="width: 70px;" 
+                    readonly>
+                  <button type="button" class="btn btn-outline-success" onclick="changeQuantity('{{ package.id }}', 1)">
+                    <i class="bi bi-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary px-4 py-2">Submit Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function changeQuantity(packageId, delta) {
+    const input = document.getElementById("qty_" + packageId);
+    let current = parseInt(input.value);
+    current = isNaN(current) ? 0 : current;
+    current += delta;
+    if (current < 0) current = 0;
+    input.value = current;
+  }
+</script>
+{% endblock %}

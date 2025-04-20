@@ -1,0 +1,64 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+    <h2>All Transactions</h2>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                {% comment %} <th>Customer</th> {% endcomment %}
+                <th>Transaction Code</th>
+                <th>Time</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+                <tr data-bs-toggle="modal" data-bs-target="#transactionModal{{ transaction.id }}">
+                    <td>{{ transaction.order.id }}</td>
+                    {% comment %} <td>{{ transaction.order.customer.user.get_full_name }}</td> {% endcomment %}
+                    <td>{{ transaction.transaction_code_customer }}</td>
+                    <td>{{ transaction.transaction_time|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#transactionModal{{ transaction.id }}">
+                            View
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Modal -->
+                <!-- Modal -->
+                <div class="modal fade" id="transactionModal{{ transaction.id }}" tabindex="-1" aria-labelledby="transactionModalLabel{{ transaction.id }}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content text-dark"> <!-- Make text dark for better visibility -->
+                      <div class="modal-header bg-light">
+                        <h5 class="modal-title fw-bold" id="transactionModalLabel{{ transaction.id }}">Transaction #{{ transaction.id }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body bg-white">
+                        <p class="mb-2"><strong>Order ID:</strong> <span class="fw-semibold">{{ transaction.order.id }}</span></p>
+                        {% comment %} <p class="mb-2"><strong>Customer:</strong> <span class="fw-semibold">{{ transaction.order.customer.user.get_full_name }}</span></p> {% endcomment %}
+                        <p class="mb-2"><strong>Code (Customer):</strong> <span class="fw-semibold">{{ transaction.transaction_code_customer }}</span></p>
+                        <p class="mb-2"><strong>Time:</strong> <span class="fw-semibold">{{ transaction.transaction_time }}</span></p>
+                        <p class="mb-0"><strong>Status:</strong>
+                          {% if transaction.order.status == 'paid' %}
+                            <span class="badge bg-success">Paid</span>
+                          {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                          {% endif %}
+                        </p>
+                      </div>
+                      <div class="modal-footer bg-light">
+                        {% comment %} <a href="{% url 'confirm_transaction' transaction.id %}" class="btn btn-primary fw-bold">Confirm</a> {% endcomment %}
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

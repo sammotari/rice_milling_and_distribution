@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2>Paddy Supply List</h2>
+  
+  {% if supplies %}
+    <table>
+      <thead>
+        <tr>
+          <th>Farmer</th>
+          <th>Quantity (kg)</th>
+          <th>Quality Rating</th>
+          <th>Moisture Content (%)</th>
+          <th>Status</th>
+          <th>Total Amount</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for supply in supplies %}
+          <tr>
+            <td>{{ supply.farmer.user.first_name }} {{ supply.farmer.user.last_name }}</td>
+            <td>{{ supply.quantity }}</td>
+            <td>{{ supply.quality_rating }}</td>
+            <td>{{ supply.moisture_content }}</td>
+            <td>{{ supply.get_status_display }}</td>
+            <td>{{ supply.total_amount }}</td>
+            <td>{{ supply.timestamp }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No paddy supplies recorded yet.</p>
+  {% endif %}
+{% endblock %}

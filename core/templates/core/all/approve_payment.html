@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Approve Payment for {{ supply.farmer.user.get_full_name }}</h1>
+    <p>Supply Quantity: {{ supply.quantity }}kg</p>
+    <p>Total Amount: KSh{{ supply.total_amount }}</p>
+    <p>Current Status: {{ supply.get_payment_status_display }}</p>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_payment_reference_code">Payment Reference Code:</label>
+            <input type="text" name="payment_reference_code" id="id_payment_reference_code" class="form-control" required>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Approve Payment</button>
+    </form>
+
+    <a href="{% url 'supply_list' %}" class="btn btn-secondary mt-3">Back to Supply List</a>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Title -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Confirm Delivery</h1>
+    </div>
+
+    <!-- Confirmation Form -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Confirm Delivery</h6>
+        </div>
+        <div class="card-body">
+            <p><strong>Order Number:</strong> #{{ order.id }}</p>
+            <p><strong>Items:</strong> {{ order.total_kg }} × 50kg Rice Bags</p>
+            <p><strong>Delivery Address:</strong> {{ order.delivery.delivery_address }}</p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="deliveryStatus">Delivery Status</label>
+                    <select class="form-control" id="deliveryStatus" name="delivery_status">
+                        <option value="delivered" {% if delivery.is_delivered %}selected{% endif %}>Delivered</option>
+                        <option value="failed" {% if not delivery.is_delivered %}selected{% endif %}>Failed</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Confirm</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

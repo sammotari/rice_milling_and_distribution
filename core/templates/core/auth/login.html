@@ -1,8 +1,6 @@
-
 {% extends 'core/base.html' %}
 {% load widget_tweaks %}
 {% load static %}
-
 
 {% block title %}Login{% endblock %}
 
@@ -10,15 +8,16 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h2 class="text-center">Login</h2>
+            <h2 class="text-center text-white">Login</h2>
             <form method="POST">
                 {% csrf_token %}
                 
+                <!-- Email or Username Field -->
                 <div class="form-group">
-                    <label for="id_username">Email or Username</label>
+                    <label for="id_username" class="text-white">Email or Username</label>
                     {{ form.username|add_class:"form-control" }}
                     {% if form.username.errors %}
-                        <div class="invalid-feedback">
+                        <div class="invalid-feedback d-block">
                             {% for error in form.username.errors %}
                                 <p>{{ error }}</p>
                             {% endfor %}
@@ -26,11 +25,13 @@
                     {% endif %}
                 </div>
                 
+
+                <!-- Password Field -->
                 <div class="form-group">
-                    <label for="id_password">Password</label>
+                    <label for="id_password" class="text-white">Password</label>
                     {{ form.password|add_class:"form-control" }}
                     {% if form.password.errors %}
-                        <div class="invalid-feedback">
+                        <div class="invalid-feedback d-block">
                             {% for error in form.password.errors %}
                                 <p>{{ error }}</p>
                             {% endfor %}
@@ -38,15 +39,19 @@
                     {% endif %}
                 </div>
 
+                <!-- Login Button -->
                 <div class="form-group text-center">
-                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
                 </div>
 
+                <!-- Forgot Password Link -->
                 <div class="text-center mt-3">
-                    <a href="{% url 'password_reset' %}">Forgot your password?</a>
+                    <a href="{% url 'password_reset' %}" class="text-white">Forgot your password?</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+
 {% endblock %}

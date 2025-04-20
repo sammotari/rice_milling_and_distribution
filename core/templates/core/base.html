@@ -1,20 +1,379 @@
 {% load static %}
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <!-- Link to Bootstrap CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rmmad system </title>
+    
+    <!-- Bootstrap CSS -->
     <link href="{% static 'core/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <!-- Optionally, link to your custom styles.css file if you have additional styles -->
-    <link href="{% static 'core/css/styles.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'core/fontawsome/css/all.css' %}">
+    
+    <style>
+        /* Gradient Wave Animation */
+        @keyframes gradientWave {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Dark Theme with Gradient Background */
+        body {
+            background: linear-gradient(-45deg, #102E50, #143b66, #1a4b8c, #143b66);
+            background-size: 400% 400%;
+            animation: gradientWave 15s ease infinite;
+            color: #f0f0f0;
+            min-height: 100vh;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: rgba(20, 59, 102, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffc107;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            text-shadow: 0 0 10px rgba(255, 193, 7, 0.7);
+            transform: scale(1.02);
+        }
+
+        .navbar-brand span {
+            font-family: 'Arial', sans-serif;
+        }
+
+        .navbar-nav .nav-link {
+            color: #f0f0f0;
+            position: relative;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffc107;
+            transform: translateY(-2px);
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #ffc107;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 70%;
+            left: 15%;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #ffc107;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .active .nav-link {
+            color: #ffc107 !important;
+        }
+
+        .navbar-nav .active .nav-link::after {
+            width: 70%;
+            left: 15%;
+            background: #ffc107;
+        }
+
+        /* Button Styling */
+        .btn-light {
+            background-color: #ffc107;
+            color: #102E50;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-light:hover {
+            background-color: #e0a800;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Custom Toggler Animation */
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem;
+        }
+
+        .navbar-toggler-icon {
+            width: 30px;
+            height: 3px;
+            display: block;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+        }
+
+        .navbar-toggler-icon:nth-child(2) {
+            margin: 6px 0;
+        }
+
+        .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:first-child {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:nth-child(2) {
+            opacity: 0;
+        }
+
+        .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:last-child {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Card Hover Effect */
+        .card-hover {
+            transition: all 0.3s ease;
+            background-color: rgba(20, 59, 102, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) rotate(1deg);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 
+                        0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            background-color: rgba(20, 59, 102, 0.9);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse:hover {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Glow Text */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(255, 193, 7, 0.7);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #102E50;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #7c3aed;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a78bfa;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            padding-top: 2rem;
+            padding-bottom: 4rem;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: rgba(16, 46, 80, 0.9);
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+    </style>
 </head>
 
-<body>
-   
-    <!-- Your body content here -->
-    {% block content %}{% endblock %}
-    <!-- Link to Bootstrap JS Bundle -->
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navbar Section -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand pulse" href="" style="font-size: 2rem; font-weight: bold; color: #ffc107; text-transform: uppercase; letter-spacing: 1px;">
+                <span style="font-family: 'Arial', sans-serif; font-weight: 700;">RMAD</span> 
+                <span style="font-family: 'Arial', sans-serif; font-weight: 400;">SYSTEM</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <!-- Conditional links based on the user's role -->
+                    {% if user.role == 'FARMER' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'farmer_dashboard' %}">Farmer Dashboard</a>
+                        </li>
+                    {% elif user.role == 'CUSTOMER' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'customer_dashboard' %}">Customer Dashboard</a>
+                        </li>
+                    {% elif user.role == 'DELIVERY' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'delivery_dashboard' %}">Delivery Dashboard</a>
+                        </li>
+                    {% elif user.role == 'MILL_OPERATOR' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'mill_operator_dashboard' %}">Mill Operator Dashboard</a>
+                        </li>
+                    {% elif user.role == 'ADMIN' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content flex-grow-1">
+        <div class="container py-4">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto text-light py-4">
+        <div class="container text-center">
+            
+            
+            <div class="row justify-content-center mb-3 text-left">
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-info font-weight-bold">Accepted Banks</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-1">
+                            <i class="fas fa-university text-success mr-2"></i>
+                            <strong>Equity Bank</strong> — <span class="text-grey-800">Acc: 0123456789</span>
+                        </li>
+                        <li class="mb-1">
+                            <i class="fas fa-university text-success mr-2"></i>
+                            <strong>KCB Bank</strong> — <span class="text-grey-800">Acc: 9876543210</span>
+                        </li>
+                        <li class="mb-1">
+                            <i class="fas fa-university text-success mr-2"></i>
+                            <strong>Cooperative Bank</strong> — <span class="text-grey-800">Acc: 4567891230</span>
+                        </li>
+                        <li class="mb-1">
+                            <i class="fas fa-university text-success mr-2"></i>
+                            <strong>Standard Chartered</strong> — <span class="text-grey-800">Acc: 6789012345</span>
+                        </li>
+                        <li class="mb-1">
+                            <i class="fas fa-university text-success mr-2"></i>
+                            <strong>Barclays Bank</strong> — <span class="text-grey-800">Acc: 3210987654</span>
+                        </li>
+                        <li class="mb-1">
+                            <i class="fas fa-university text-success mr-2"></i>
+                            <strong>Absa Bank</strong> — <span class="text-mugrey-800ted">Acc: 1122334455</span>
+                        </li>
+                        <li class="mb-1">
+                            <i class="fas fa-university text-success mr-2"></i>
+                            <strong>NCBA Bank</strong> — <span class="text-grey-800">Acc: 5566778899</span>
+                        </li>
+                        <li class="mb-1">
+                            <i class="fas fa-university text-success mr-2"></i>
+                            <strong>DTB Bank</strong> — <span class="text-grey-800">Acc: 6677889900</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-info font-weight-bold">M-Pesa Payment Details</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-1">
+                            <i class="fas fa-receipt text-warning mr-2"></i>
+                            <strong>Paybill:</strong> 123456
+                        </li>
+                        <li class="mb-1">
+                            <i class="fas fa-id-card text-warning mr-2"></i>
+                            <strong>Account:</strong> RMAD001
+                        </li>
+                        <li class="mb-1">
+                            <i class="fas fa-phone text-warning mr-2"></i>
+                            <strong>Support:</strong> +254 712 345 678
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    
+            <p class="small text-danger">
+                For inquiries or support, contact 
+                <a href="mailto:support@rmadsystem.co.ke" class="text-info">support@rmadsystem.co.ke</a>
+            </p>
+            <p class="mb-2">&copy; {% now "Y" %} RMAD SYSTEM. All rights reserved.</p>
+        </div>
+        
+    </footer>
+    
+    
+    
+
+    <!-- Bootstrap JS Bundle with Popper -->
     <script src="{% static 'core/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-    <!-- Optionally, link to your custom scripts.js file if you have additional scripts -->
+    <!-- Custom Scripts -->
     <script src="{% static 'core/js/scripts.js' %}"></script>
+    
+    <script>
+        // Add smooth scrolling to all links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add animation to navbar on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.4)';
+                navbar.style.padding = '0.5rem 0';
+            } else {
+                navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+                navbar.style.padding = '1rem 0';
+            }
+        });
+    </script>
 </body>
+</html>

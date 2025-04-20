@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="mb-3">Confirm Transaction for Order #{{ order.id }}</h2>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <p><strong>Customer:</strong> {{ order.customer.user.get_full_name }}</p>
+                <p><strong>Transaction Code (Customer):</strong> {{ transaction.transaction_code_customer }}</p>
+                <p><strong>Transaction Time:</strong> {{ transaction.transaction_time }}</p>
+                <p><strong>Order Status:</strong> 
+                    {% if order.status == 'paid' %}
+                        <span class="badge bg-success">Paid</span>
+                    {% elif order.status == 'pending' %}
+                        <span class="badge bg-warning">Pending</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ order.status|capfirst }}</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        {% if order.status == 'paid' %}
+            <div class="alert alert-info">This transaction has already been confirmed and marked as paid.</div>
+        {% else %}
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="transaction_code_admin">Admin Transaction Code</label>
+                    <input type="text" class="form-control" name="transaction_code_admin" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Confirm Transaction</button>
+            </form>
+        {% endif %}
+
+        <hr>
+        <a href="{% url 'all_transactions' %}" class="btn btn-secondary mt-3">← Back to Transactions</a>
+    </div>
+{% endblock %}

@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-1vs))nm12h+sp&7zs-@)1(59gwd8t3+)yawma@0%)z_&_&2a4h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://32d8-129-222-187-20.ngrok-free.app' , '*']
+CSRF_TRUSTED_ORIGINS = [
+    'https://32d8-129-222-187-20.ngrok-free.app',
+]
+
 
 
 # Application definition
@@ -41,6 +45,8 @@ INSTALLED_APPS = [
 
     'core.apps.CoreConfig',
     'widget_tweaks',
+    'dal',
+    'dal_select2',
 
     
 ]
@@ -113,8 +119,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
 
+TIME_ZONE = 'Africa/Nairobi'
 USE_I18N = True
 
 USE_TZ = True
@@ -151,3 +157,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # messages.success(Self.request, "User added successfully!")
 # messages.error(Self.request, "Error creating user. Please check the form.")
+AUTHENTICATION_BACKENDS = [
+    'core.backends.EmailOrUsernameModelBackend',  # <-- Replace `core` with your app name
+    'django.contrib.auth.backends.ModelBackend',
+]

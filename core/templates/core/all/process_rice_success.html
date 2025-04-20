@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-left-success shadow h-100 py-5">
+                <div class="card-body text-center">
+                    <h2 class="text-success">Processed Rice Successfully!</h2>
+                    <p class="lead">The rice has been processed and the inventory has been updated.</p>
+                    <a href="{% url 'mill_operator_dashboard' %}" class="btn btn-success">Go to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

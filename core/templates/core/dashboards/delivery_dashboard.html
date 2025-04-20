@@ -20,38 +20,23 @@
     </div>
 
     <div class="row">
-        <h5 class=" text-gray-800">Vehicle: ABC-1234</h5> <!-- Static vehicle number -->
+        <h5 class="text-gray-800">Vehicle: {{ delivery_personnel.vehicle_number }}</h5> <!-- Dynamic vehicle number -->
+        <small>{% include 'core/partials/paddy_price.html' %}</small>
 
-        <!-- Assigned Deliveries -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <!-- Assigned Orders -->
+        <div class="col-xl-12 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Assigned Deliveries</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">5</div> <!-- Static number of assigned deliveries -->
+                                Assigned Orders</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ assigned_orders.count }} <!-- Dynamic count of assigned orders -->
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-truck fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Completed Deliveries -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Completed (This Month)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">12</div> <!-- Static number of completed deliveries -->
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                            <i class="fas fa-box fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -60,10 +45,10 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Active Deliveries</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Active Orders</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -73,32 +58,41 @@
                                     <th>Order #</th>
                                     <th>Customer</th>
                                     <th>Address</th>
+                                    <th>Phone Number</th> <!-- Added this column -->
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for order in assigned_orders %}
                                 <tr>
-                                    <td>12345678</td> <!-- Static Order ID -->
-                                    <td>John Doe</td> <!-- Static Customer Name -->
-                                    <td>123 Some Street, City, Country</td> <!-- Static Customer Address -->
-                                    <td><span class="badge badge-warning text-gray-800">Pending</span></td> <!-- Static Status with grey text -->
+                                    <td>{{ order.id }}</td>
+                                    <td>{{ order.customer_name }}</td>
+                                    <td>{{ order.delivery_address }}</td>
+                                    <td>{{ order.phone_number }}</td> <!-- Display the phone number -->
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-primary">Manage</a>
+                                        {% if order.status == 'pending' %}
+                                            <span class="badge bg-warning text-gray-800">Pending</span>
+                                        {% elif order.status == 'paid' %}
+                                            <span class="badge bg-primary text-gray-800">Paid</span>
+                                        {% elif order.status == 'delivered' %}
+                                            <span class="badge bg-success text-gray-800">Delivered</span>
+                                        {% elif order.status == 'cancelled' %}
+                                            <span class="badge bg-danger text-gray-800">Cancelled</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'update_delivery_status' order.id %}" class="btn btn-sm btn-primary">Update Status</a>
                                     </td>
                                 </tr>
+                                {% empty %}
                                 <tr>
-                                    <td>23456789</td> <!-- Static Order ID -->
-                                    <td>Jane Smith</td> <!-- Static Customer Name -->
-                                    <td>456 Another St, City, Country</td> <!-- Static Customer Address -->
-                                    <td><span class="badge badge-success text-gray-800">Completed</span></td> <!-- Static Status with grey text -->
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-primary">Manage</a>
-                                    </td>
+                                    <td colspan="6" class="text-center">No assigned orders.</td> <!-- Adjusted colspan -->
                                 </tr>
-                                <!-- Add more rows as needed -->
+                                {% endfor %}
                             </tbody>
                         </table>
+                        
                     </div>
                 </div>
             </div>

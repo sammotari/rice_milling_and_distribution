@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+{% load custom_filters %}
+
+
+{% block content %}
+<div class="container">
+    <h1 class="h3 mb-4 text-gray-800">Set Paddy Price</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="m-0 font-weight-bold">Paddy Price Form</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="id_price_per_kg" class="form-label">Price per kg</label>
+                    {{ form.price_per_kg|add_class:"form-control" }}
+                </div>
+                <button type="submit" class="btn btn-primary btn-block mt-4">
+                    Save Price
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

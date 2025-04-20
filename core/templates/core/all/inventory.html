@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Paddy Inventory -->
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Paddy Inventory</h6>
+                </div>
+                <div class="card-body">
+                    <p>Total Unprocessed Paddy: {{ paddy_inventory.quantity }} kg</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processed Rice Inventory -->
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Processed Rice Inventory</h6>
+                </div>
+                <div class="card-body">
+                    <p>Total Processed Rice: {{ processed_rice_inventory.quantity }} kg</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sold Rice Inventory -->
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Sold Rice Inventory</h6>
+                </div>
+                <div class="card-body">
+                    <p>Total Sold Rice: {{ sold_rice_inventory.quantity }} kg</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

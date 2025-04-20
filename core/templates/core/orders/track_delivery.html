@@ -1,0 +1,50 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>🚚 Track Your Delivery</h3>
+
+    <div class="card shadow-sm mt-3">
+        <div class="card-body">
+            <h5>Order #{{ order.id }}</h5>
+
+            <p><strong>Status:</strong>
+                {% if order.status == 'pending' %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                {% elif order.status == 'paid' %}
+                    <span class="badge bg-primary">Paid</span>
+                {% elif order.status == 'delivered' %}
+                    <span class="badge bg-success">Delivered</span>
+                {% elif order.status == 'cancelled' %}
+                    <span class="badge bg-danger">Cancelled</span>
+                {% endif %}
+            </p>
+
+            {% if order.delivery_personnel %}
+                <hr>
+                <h6 class="mb-2">Assigned Delivery Personnel:</h6>
+                <ul class="list-unstyled">
+                    <li><strong>Name:</strong> {{ order.delivery_personnel.user.get_full_name }}</li>
+                    <li><strong>Phone:</strong> {{ order.delivery_personnel.user.phone_number }}</li>
+                    <li><strong>Vehicle No:</strong> {{ order.delivery_personnel.vehicle_number }}</li>
+                </ul>
+            {% else %}
+                <p><em>No delivery personnel has been assigned yet.</em></p>
+            {% endif %}
+
+            {% if delivery %}
+                <hr>
+                <p><strong>Delivered:</strong>
+                    {% if delivery.is_delivered %}
+                        ✅ Yes
+                    {% else %}
+                        ❌ Not yet
+                    {% endif %}
+                </p>
+            {% endif %}
+
+            <a href="{% url 'customer_dashboard' %}" class="btn btn-secondary mt-3">🔙 Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

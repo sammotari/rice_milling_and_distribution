@@ -7,6 +7,7 @@
         <div>
             <h1 class="h3 mb-0 text-gray-800">Farmer Dashboard</h1>
             <span class="text-muted">Account: {{ request.user.farmer.account_number|default:"Not specified" }}</span>
+            <small>{% include 'core/partials/paddy_price.html' %}</small>
         </div>
         <div>
             <div class="btn-group" role="group">
@@ -30,11 +31,6 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="mr-3">
-                            <img class="img-profile rounded-circle" 
-                                 src="/static/core/img/default-profile.png" 
-                                 width="60" height="60">
-                        </div>
                         <div>
                             <h5 class="font-weight-bold">{{ request.user.get_full_name }}</h5>
                             <p class="text-muted mb-0">{{ request.user.email }}</p>
@@ -44,11 +40,11 @@
                     <div class="row">
                         <div class="col-6">
                             <p class="mb-1"><strong>Bank:</strong></p>
-                            <p>Sample Bank</p>
+                            <p>{{ request.user.farmer.bank_name|default:"Not specified" }}</p>
                         </div>
                         <div class="col-6">
                             <p class="mb-1"><strong>Account:</strong></p>
-                            <p>XXXXXX7890</p>
+                            <p>{{ request.user.farmer.account_number|default:"Not specified" }}</p>
                         </div>
                     </div>
                 </div>
@@ -57,25 +53,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="row">
-        <!-- Paddy Supplied Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total Paddy Supplied (kg)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">1,250</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-weight fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    {% comment %} <div class="row">
         <!-- Payments Card -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-info shadow h-100 py-2">
@@ -83,8 +61,11 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Total Payments</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">KSh25,000</div>
+                                Total Payments
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                KSh {{ total_payments|default:"0" }}
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-coins fa-2x text-gray-300"></i>
@@ -93,7 +74,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
 
     <!-- Recent Supplies Section -->
     <div class="row">
@@ -103,20 +84,43 @@
                     <h6 class="m-0 font-weight-bold text-primary">Recent Supplies</h6>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> Supply tracking will be available soon
-                    </div>
-                    <div class="text-center py-4">
-                        <i class="fas fa-truck-loading fa-3x text-gray-300 mb-3"></i>
-                        <p class="text-muted">No recent supplies recorded</p>
-                    </div>
-                    <button class="btn btn-primary mt-2" disabled title="Feature coming soon">
-                        <i class="fas fa-plus"></i> New Supply
-                    </button>
+                    {% if paddy_supplies %}
+                        <ul class="list-group">
+                            {% for supply in paddy_supplies %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ supply.farmer.user.get_full_name }}</strong><br>
+                                        <small>Status: {{ supply.status|capfirst }}</small><br>
+                                        <small>Moisture: {{ supply.moisture_content }}%</small><br>
+                                        <small>Quality: {{ supply.quality_rating }} out of 5</small>
+                                    </div>
+                                    <div>
+                                        <strong>{{ supply.quantity }} kg</strong><br>
+                                        <small>Total Amount: KSh {{ supply.total_amount|floatformat:2 }}</small><br>
+                                        
+                                        {% if supply.payment_reference_code %}
+                                            <small>Payment Reference: {{ supply.payment_reference_code }}</small><br>
+                                        {% else %}
+                                            <small>No reference code available</small><br>
+                                        {% endif %}
+                                        
+                                        {% if supply.payment_status == 'paid' %}
+                                            <span class="badge badge-danger text-primary">Paid</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">Unpaid</span>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No recent supplies recorded</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    
 </div>
 
 <!-- Profile Modal -->
@@ -162,6 +166,7 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}

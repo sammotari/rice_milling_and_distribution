@@ -1,0 +1,57 @@
+<div class="modal-header">
+    <h5 class="modal-title">Order #{{ order.id }} Details</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <p><strong>Customer:</strong> {{ order.customer_name }}</p>
+    <p><strong>Phone:</strong> {{ order.phone_number }}</p>
+    <p><strong>Delivery Address:</strong> {{ order.delivery_address }}</p>
+    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+    <p><strong>Created At:</strong> {{ order.created_at }}</p>
+    
+    {% if order.delivery_personnel %}
+    <p><strong>Delivery Personnel:</strong> {{ order.delivery_personnel.user.first_name }} {{ order.delivery_personnel.user.last_name }}</p>
+    {% else %}
+    <p><strong>Delivery Personnel:</strong> Not assigned</p>
+    {% endif %}
+    
+    <hr>
+    <h6>Items:</h6>
+    <ul>
+        {% for item in order.items.all %}
+        <li>{{ item.quantity }} × {{ item.package_size }} = KES {{ item.get_total_amount }}</li>
+        {% endfor %}
+    </ul>
+    
+    <p><strong>Total Weight:</strong> {{ order.total_kg }} kg</p>
+    <p><strong>Total Amount:</strong> KES {{ order.total_amount }}</p>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>
+
+<style>
+    .modal-body p, .modal-body h6 {
+        color: #333;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+    .modal-header, .modal-footer {
+        background-color: #f8f9fa;
+    }
+    .modal-title {
+        color: #1d2124;
+    }
+    .modal-footer button {
+        background-color: #6c757d;
+        color: white;
+    }
+    .modal-footer button:hover {
+        background-color: #5a6268;
+    }
+    ul{
+        background-color:rgb(45, 57, 68);
+        color: white;
+  
+    }
+</style>

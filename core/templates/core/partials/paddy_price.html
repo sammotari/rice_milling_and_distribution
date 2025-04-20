@@ -1,0 +1,29 @@
+<style>
+  .paddy-price-display {
+    color:rgb(255, 255, 255); /* Pure red */
+  }
+  .paddy-price-label {
+    color:rgb(207, 189, 189); /* Slightly darker red */
+    font-weight: 500;
+  }
+  .paddy-price-date {
+    color:rgb(255, 255, 255); /* Lighter red */
+    font-size: 0.65rem;
+  }
+  .paddy-price-unset {
+    color:rgb(255, 255, 255); /* Very light red */
+    font-style: italic;
+  }
+</style>
+
+{% if paddy_price %}
+<div class="inline-flex items-center text-xs border-l-2 border-red-300 pl-2 py-1 paddy-price-display">
+    <span class="mr-1 paddy-price-label">Paddy Price:</span>
+    {{ paddy_price.price_per_kg }} KES/kg effective
+    <span class="ml-1 paddy-price-date">({{ paddy_price.effective_date|date:"M d" }})</span>
+</div>
+{% else %}
+<div class="inline-flex items-center text-xs border-l-2 border-red-200 pl-2 py-1 paddy-price-display">
+    <span class="paddy-price-unset">Price not set</span>
+</div>
+{% endif %}

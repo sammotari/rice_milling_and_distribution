@@ -3,95 +3,33 @@
 {% block content %}
 <div class="container-fluid">
     <!-- Dashboard Header with Profile Link -->
-    
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div>
             <h1 class="h3 mb-0 text-gray-800">Customer Dashboard</h1>
-            {% if request.user.customer %}
-                <span class="text-muted">Delivery Address: {{ request.user.customer.delivery_address|default:"Not specified" }}</span>
-            {% endif %}
+            <span class="text-muted">Delivery Address: </span>
         </div>
         <div>
             <div class="btn-group" role="group">
                 <a href="{% url 'profile' %}" class="btn btn-circle btn-primary mr-2" title="Manage Profile">
                     <i class="fas fa-user"></i>
                 </a>
-                <a href="{% url 'logout' %}" class="btn btn-circle btn-danger" title="Logout">
+                <a href="{% url 'logout' %}" class="btn btn-circle btn-danger" title="Logout" data-toggle="modal" data-target="#logoutModal">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="logoutModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Select "Logout" below if you are ready to end your current session.
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-    <!-- Profile Quick Info Card -->
-    <div class="row mb-4">
-        <div class="col-lg-4">
-            <div class="card shadow">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Profile Overview</h6>
-                    <a href="{% url 'profile' %}" class="btn btn-sm btn-link">Edit</a>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        {% comment %} <div class="mr-3">
-                            <img class="img-profile rounded-circle" 
-                                 src="{{ request.user.profile_photo.url|default:'/core/images/dp.jpg' }}" 
-                                 width="60" height="60">
-                        </div> {% endcomment %}
-                        <div>
-                            <h5 class="font-weight-bold">{{ request.user.get_full_name }}</h5>
-                            <p class="text-muted mb-0">{{ request.user.email }}</p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-6">
-                            <p class="mb-1"><strong>Phone:</strong></p>
-                            <p>{{ request.user.phone_number|default:"Not provided" }}</p>
-                        </div>
-                        <div class="col-6">
-                            <p class="mb-1"><strong>Member Since:</strong></p>
-                            <p>{{ request.user.date_joined|date:"M Y" }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Orders Section -->
+    <!-- Orders Summary Cards -->
     <div class="row">
-        <!-- Orders Card -->
+        <!-- Total Orders Card -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Orders</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Orders</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_orders }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-shopping-bag fa-2x text-gray-300"></i>
@@ -107,12 +45,45 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Pending Orders</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Orders</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pending_orders }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paid Orders Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Paid Orders</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ paid_orders }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delivered Orders Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Delivered Orders</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ delivered_orders }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-truck fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -122,62 +93,93 @@
 
     <!-- Recent Orders Section -->
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Recent Orders</h6>
-                    <button class="btn btn-sm btn-primary" disabled title="Feature coming soon">
+                    <a href="{% url 'place_order' %}" class="btn btn-sm btn-primary">
                         <i class="fas fa-plus"></i> New Order
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> Order management will be available soon
-                    </div>
-                    <div class="text-center py-4">
-                        <i class="fas fa-shopping-cart fa-3x text-gray-300 mb-3"></i>
-                        <p class="text-muted">No orders yet</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Profile Modal (Alternative to separate page) -->
-<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="profileModalLabel">Profile Management</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- This would be loaded via AJAX or iframe -->
-                <div class="text-center py-5">
-                    <i class="fas fa-user-cog fa-3x text-gray-300 mb-3"></i>
-                    <p>Profile management system loading...</p>
-                    <a href="{% url 'profile' %}" class="btn btn-primary">
-                        <i class="fas fa-external-link-alt"></i> Open Full Profile Page
                     </a>
                 </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Items</th>
+                                    <th>Total Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        {% if order.items.all %}
+                                            {% for item in order.items.all %}
+                                                {{ item.quantity }} × {{ item.package_size }}{% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <em>No items</em>
+                                        {% endif %}
+                                    </td>
+                                    <td>KES {{ order.total_amount }}</td>
+                                    <td>
+                                        {% if order.status == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% elif order.status == 'paid' %}
+                                            <span class="badge bg-primary">Paid</span>
+                                        {% elif order.status == 'delivered' %}
+                                            <span class="badge bg-success">Delivered</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ order.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'order_details' order.id %}" class="btn btn-sm btn-info" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if order.status == 'pending' %}
+                                        <a href="{% url 'enter_transaction_code' order.id %}" class="btn btn-sm btn-primary" title="Add Payment">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                        </a>
+                                        {% endif %}
+                                        <a href="{% url 'track_delivery' order.id %}" class="btn btn-sm btn-info" title="Track Delivery">
+                                            <i class="fas fa-truck"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="6" class="text-center">No recent orders.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-danger" href="#">Logout</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-// Optional: If you want to load profile in a modal instead of new page
-$(document).ready(function(){
-    $('.profile-link').click(function(e){
-        e.preventDefault();
-        $('#profileModal').modal('show');
-        // Here you could load the profile form via AJAX
-    });
-});
-</script>
 {% endblock %}

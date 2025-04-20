@@ -1,0 +1,33 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3 class="mb-4">📦 Update Delivery Status</h3>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="mb-3">
+                    <label for="{{ form.is_delivered.id_for_label }}" class="form-label">
+                        Mark as Delivered:
+                    </label>
+                    {{ form.is_delivered }}
+                    {% if form.is_delivered.errors %}
+                        <div class="text-danger">{{ form.is_delivered.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    ✅ Update Status
+                </button>
+                <a href="{% url 'delivery_dashboard' %}" class="btn btn-secondary ms-2">
+                    🔙 Back to Dashboard
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
