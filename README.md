@@ -46,7 +46,7 @@
 1. **Clone the Repo**
 
 ```bash
-git clone https://github.com/sammotari/rmad_system.git
+git clone [https://github.com/sammotari/rmad_system.git](https://github.com/sammotari/rice_milling_and_distribution.git)
 cd rmad_system
 
     Create Virtual Environment & Install Requirements
