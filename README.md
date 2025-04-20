@@ -31,6 +31,10 @@
   - View statistics and approve transactions
 
 ---
+![Capture](https://github.com/user-attachments/assets/37924ebe-5241-4819-b368-be04122d0522)
+![Capture1](https://github.com/user-attachments/assets/064a42d0-973a-42fd-864f-303cafdac9e6)
+![Capturee](https://github.com/user-attachments/assets/719bb633-f88f-4f95-b8e7-2a6574259b23)
+
 
 ## 🛠 Tech Stack
 
